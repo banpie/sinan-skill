@@ -1,0 +1,4 @@
+interface:
+  display_name: "项目司南"
+  short_description: "为长期 AI 项目建立 AGENTS.md 入口和持续任务记忆"
+  default_prompt: "使用 $project-sinan 为当前项目建立或恢复 AGENTS.md AI 对话入口、项目状态和任务清单，并从未完成任务继续推进。"
