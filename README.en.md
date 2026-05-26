@@ -29,6 +29,42 @@ Quick mental model:
 
 ## Quick Start
 
+### Install As A Skill
+
+The standard Skill entrypoint is the repository-level `SKILL.md`. The `scripts/` directory contains helper scripts the Skill can run; `agents/` contains display or adapter metadata for different agent platforms.
+
+Install globally for Codex:
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/banpie/project-sinan.git ~/.codex/skills/project-sinan
+```
+
+Install globally for OpenCode:
+
+```bash
+mkdir -p ~/.config/opencode/skills
+git clone https://github.com/banpie/project-sinan.git ~/.config/opencode/skills/project-sinan
+```
+
+For project-local use, you can also clone or symlink this repository into the project's Skill directory, for example `.opencode/skills/project-sinan/` for OpenCode.
+
+After installing, open the target project in Codex, OpenCode, or another `SKILL.md`-aware agent and say:
+
+```text
+Use project-sinan to initialize this project.
+```
+
+Or:
+
+```text
+Use Project Sinan to take over this project. First do a read-only audit, then create AGENTS.md and the .project memory files.
+```
+
+The agent reads `SKILL.md`, decides whether the current directory is a new project, an existing project, or a messy takeover, and then runs `scripts/init_project.py` when appropriate.
+
+### Run The Script Manually
+
 Clone the repository:
 
 ```bash

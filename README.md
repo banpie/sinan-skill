@@ -29,6 +29,42 @@
 
 ## 快速开始
 
+### 作为 Skill 安装
+
+项目司南的标准 Skill 入口是仓库根目录的 `SKILL.md`。`scripts/` 里的脚本是给 Skill 调用的辅助工具；`agents/` 是给不同 Agent/平台使用的展示或适配配置。
+
+Codex 全局安装：
+
+```bash
+mkdir -p ~/.codex/skills
+git clone https://github.com/banpie/project-sinan.git ~/.codex/skills/project-sinan
+```
+
+OpenCode 全局安装：
+
+```bash
+mkdir -p ~/.config/opencode/skills
+git clone https://github.com/banpie/project-sinan.git ~/.config/opencode/skills/project-sinan
+```
+
+如果你只想在某个项目里使用，也可以把仓库克隆或软链接到该项目的 Skill 目录，例如 OpenCode 的 `.opencode/skills/project-sinan/`。
+
+安装后，在 Codex、OpenCode 或其它支持 `SKILL.md` 的 Agent 里打开目标项目，然后直接说：
+
+```text
+使用 project-sinan 初始化这个项目。
+```
+
+或：
+
+```text
+使用项目司南接管这个项目，先只读盘点，再建立 AGENTS.md 和 .project 项目记忆。
+```
+
+Agent 会读取 `SKILL.md`，根据当前目录判断是新项目、旧项目还是混乱项目，再决定是否运行 `scripts/init_project.py`。
+
+### 手动运行脚本
+
 克隆仓库：
 
 ```bash
