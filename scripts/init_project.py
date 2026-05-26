@@ -201,6 +201,12 @@ def required_state(project: pathlib.Path) -> list[tuple[pathlib.Path, str]]:
     ]
 
 
+def required_dirs(project: pathlib.Path) -> list[pathlib.Path]:
+    return [
+        project / ".project" / "tasks",
+    ]
+
+
 def agents_action(path: pathlib.Path) -> str:
     if not path.exists():
         return "create"
@@ -214,6 +220,7 @@ def agents_action(path: pathlib.Path) -> str:
 
 def check_project(project: pathlib.Path) -> int:
     missing = [str(path.relative_to(project)) for path, _ in required_state(project) if not path.exists()]
+    missing.extend(str(path.relative_to(project)) for path in required_dirs(project) if not path.exists())
     action = agents_action(project / "AGENTS.md")
     if action != "ready":
         missing.append("AGENTS.md 中的司南入口")
@@ -230,6 +237,13 @@ def initialize(project: pathlib.Path, dry_run: bool) -> int:
     if not dry_run:
         project.mkdir(parents=True, exist_ok=True)
     changes: list[str] = []
+    for path in required_dirs(project):
+        if path.exists():
+            continue
+        changes.append(f"创建 {path.relative_to(project)}")
+        if not dry_run:
+            path.mkdir(parents=True, exist_ok=True)
+
     for path, content in required_state(project):
         if path.exists():
             continue
