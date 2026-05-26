@@ -105,25 +105,25 @@ Sinan Skill has two main paths: set up durable memory for a new project from day
 For a new project, say:
 
 ```text
-Initialize this project. It is an AI course resource organizer. Set up project memory and the first-stage tasks.
+Initialize this project. Project goal: build an AI course resource organizer.
 ```
 
 For an existing project, say:
 
 ```text
-Take over this project. First do a read-only audit. Do not move, delete, or rename files yet. Tell me where to continue.
+Take over this project. First pass is read-only. Do not move, delete, or rename files.
 ```
 
 For a messy folder, say:
 
 ```text
-Organize this project. First create a project map and identify sources of truth. Do not modify production files yet.
+Organize this project. Start with the existing-project takeover flow. Do not reorganize files directly.
 ```
 
 To continue previous work, say:
 
 ```text
-Continue this project. Read AGENTS.md and .project first, then continue from the open tasks.
+Continue this project. Pick up from the project memory and open tasks.
 ```
 
 ## Why This Repository Has More Than SKILL.md
