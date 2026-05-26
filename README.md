@@ -31,7 +31,21 @@
 
 ## 快速开始
 
-### 1. 安装到 Codex
+### 1. 让 Agent 直接安装（推荐）
+
+如果你正在用 Codex、OpenCode 或其它能读网页/执行命令的 Agent，可以直接把仓库链接发给它：
+
+```text
+请打开这个开源仓库并阅读 README：
+
+https://github.com/banpie/sinan-skill
+
+请帮我把这个 Skill 安装到当前 Agent 可用的 Skill 目录里。
+
+安装后请不要立刻修改我的项目文件，先告诉我安装到了哪里，以及下一步怎么在当前项目里使用。
+```
+
+### 2. 手动安装到 Codex
 
 把 Skill 放到 Codex 的 Skill 目录：
 
@@ -42,7 +56,7 @@ git clone https://github.com/banpie/sinan-skill.git ~/.codex/skills/sinan-skill
 
 如果 Codex 已经打开，安装后建议新开一个会话，让它重新读取 Skill 列表。
 
-### 2. 安装到 OpenCode
+### 3. 手动安装到 OpenCode
 
 把 Skill 放到 OpenCode 的 Skill 目录：
 
@@ -58,7 +72,7 @@ mkdir -p .opencode/skills
 git clone https://github.com/banpie/sinan-skill.git .opencode/skills/sinan-skill
 ```
 
-### 3. 直接说关键词
+### 4. 直接说关键词
 
 安装好以后，打开你的目标项目，不用输入复杂命令。直接对 Agent 说这些话就可以：
 
@@ -85,6 +99,8 @@ git clone https://github.com/banpie/sinan-skill.git .opencode/skills/sinan-skill
 Agent 会自动读取 `SKILL.md`，判断当前目录是新项目、已经在跑的项目，还是需要先盘点的混乱项目。
 
 ## 新项目和旧项目怎么用
+
+司南 Skill 有两条主线：新项目从一开始建立项目记忆；老项目先只读接手，再判断下一步。
 
 新项目可以说：
 

@@ -31,7 +31,21 @@ Quick mental model:
 
 ## Quick Start
 
-### 1. Install For Codex
+### 1. Ask Your Agent To Install It (Recommended)
+
+If you are using Codex, OpenCode, or another agent that can read webpages and run commands, give it the repository link directly:
+
+```text
+Please open this open-source repository and read the README:
+
+https://github.com/banpie/sinan-skill
+
+Install this Skill into the Skill directory that is usable by the current agent.
+
+After installing, do not modify my project files yet. First tell me where it was installed and how I should use it in the current project.
+```
+
+### 2. Install For Codex Manually
 
 Put the Skill in Codex's skills directory:
 
@@ -42,7 +56,7 @@ git clone https://github.com/banpie/sinan-skill.git ~/.codex/skills/sinan-skill
 
 If Codex is already open, start a new session after installing so it can reload the Skill list.
 
-### 2. Install For OpenCode
+### 3. Install For OpenCode Manually
 
 Put the Skill in OpenCode's global skills directory:
 
@@ -58,7 +72,7 @@ mkdir -p .opencode/skills
 git clone https://github.com/banpie/sinan-skill.git .opencode/skills/sinan-skill
 ```
 
-### 3. Use Simple Trigger Phrases
+### 4. Use Simple Trigger Phrases
 
 After installing, open the target project and say one of these:
 
@@ -85,6 +99,8 @@ Set up project memory so we do not lose context.
 The agent reads `SKILL.md`, decides whether the current directory is a new project, an already-running project, or a messy takeover, and then runs `scripts/init_project.py` when appropriate.
 
 ## New Projects And Existing Projects
+
+Sinan Skill has two main paths: set up durable memory for a new project from day one, or take over an existing project with a read-only audit first.
 
 For a new project, say:
 
