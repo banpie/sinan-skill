@@ -1,13 +1,15 @@
-# 项目司南 Project Sinan
+# 司南 Skill Sinan Skill
 
 [English README](README.en.md)
 
-项目司南是一个给 AI 协作项目使用的轻量 Skill：它会为项目建立 `AGENTS.md` 入口和 `.project/` 项目记忆，让 Codex、OpenCode、Claude Code 等 Agent 每次接手时先读取目标、状态和任务，再继续推进。
+司南 Skill 是一个给 AI 协作项目使用的轻量 Skill：它会为项目建立 `AGENTS.md` 入口和 `.project/` 项目记忆，让 Codex、OpenCode、Claude Code 等 Agent 每次接手时先读取目标、状态和任务，再继续推进。
 
 它解决的问题很朴素：不要把长对话当作项目记忆。把稳定上下文写回项目文件。
 
 ## 适合谁
 
+- 刚创建了一个新项目，想让 AI 从一开始就别跑偏。
+- 项目已经在跑，但文件、任务、文档有点乱，需要重新梳理。
 - 正在开发网站、落地页、小工具或产品原型的人。
 - 正在整理课程、资料包、交付文档或训练营 SOP 的人。
 - 用 AI 连续推进一个项目，但经常发现“越改越乱”的人。
@@ -15,7 +17,7 @@
 
 ## 它会创建什么
 
-项目司南会在目标项目中创建或补齐：
+司南 Skill 会在目标项目中创建或补齐：
 
 - `AGENTS.md`：AI 的开工说明书。
 - `.project/BRIEF.md`：项目目标、成功标准、范围和真源索引。
@@ -29,58 +31,111 @@
 
 ## 快速开始
 
-### 作为 Skill 安装
+### 1. 安装到 Codex
 
-项目司南的标准 Skill 入口是仓库根目录的 `SKILL.md`。`scripts/` 里的脚本是给 Skill 调用的辅助工具；`agents/` 是给不同 Agent/平台使用的展示或适配配置。
-
-Codex 全局安装：
+把 Skill 放到 Codex 的 Skill 目录：
 
 ```bash
 mkdir -p ~/.codex/skills
-git clone https://github.com/banpie/project-sinan.git ~/.codex/skills/project-sinan
+git clone https://github.com/banpie/sinan-skill.git ~/.codex/skills/sinan-skill
 ```
 
-OpenCode 全局安装：
+如果 Codex 已经打开，安装后建议新开一个会话，让它重新读取 Skill 列表。
+
+### 2. 安装到 OpenCode
+
+把 Skill 放到 OpenCode 的 Skill 目录：
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-git clone https://github.com/banpie/project-sinan.git ~/.config/opencode/skills/project-sinan
+git clone https://github.com/banpie/sinan-skill.git ~/.config/opencode/skills/sinan-skill
 ```
 
-如果你只想在某个项目里使用，也可以把仓库克隆或软链接到该项目的 Skill 目录，例如 OpenCode 的 `.opencode/skills/project-sinan/`。
-
-安装后，在 Codex、OpenCode 或其它支持 `SKILL.md` 的 Agent 里打开目标项目，然后直接说：
-
-```text
-使用 project-sinan 初始化这个项目。
-```
-
-或：
-
-```text
-使用项目司南接管这个项目，先只读盘点，再建立 AGENTS.md 和 .project 项目记忆。
-```
-
-Agent 会读取 `SKILL.md`，根据当前目录判断是新项目、旧项目还是混乱项目，再决定是否运行 `scripts/init_project.py`。
-
-### 手动运行脚本
-
-克隆仓库：
+也可以只给某个项目使用：
 
 ```bash
-git clone https://github.com/banpie/project-sinan.git
+mkdir -p .opencode/skills
+git clone https://github.com/banpie/sinan-skill.git .opencode/skills/sinan-skill
+```
+
+### 3. 直接说关键词
+
+安装好以后，打开你的目标项目，不用输入复杂命令。直接对 Agent 说这些话就可以：
+
+```text
+初始化项目
+```
+
+```text
+接管这个项目
+```
+
+```text
+整理这个项目
+```
+
+```text
+继续项目
+```
+
+```text
+帮我建立项目记忆，别丢上下文
+```
+
+Agent 会自动读取 `SKILL.md`，判断当前目录是新项目、已经在跑的项目，还是需要先盘点的混乱项目。
+
+## 新项目和旧项目怎么用
+
+新项目可以说：
+
+```text
+初始化项目。这个项目是一个 AI 课程资料整理工具，先帮我建立项目记忆和第一阶段任务。
+```
+
+已经在跑的项目可以说：
+
+```text
+接管这个项目。先只读盘点，不要移动、删除、重命名文件，先告诉我现在应该从哪里继续。
+```
+
+项目很乱时可以说：
+
+```text
+整理这个项目。第一轮只做项目地图和真源判断，先不要改正式文件。
+```
+
+继续上次的项目可以说：
+
+```text
+继续项目。先读 AGENTS.md 和 .project，然后从未完成任务继续。
+```
+
+## 这个仓库为什么不只有 SKILL.md
+
+标准入口仍然是仓库根目录的 `SKILL.md`。其它目录是为了让 Skill 更稳定：
+
+- `SKILL.md`：给 Agent 看的核心工作流和触发规则。
+- `scripts/init_project.py`：初始化 `AGENTS.md` 和 `.project/` 的辅助脚本。
+- `agents/openai.yaml`：给 Codex 等平台展示名称、简介和默认提示词。
+
+## 手动运行脚本
+
+如果你的 Agent 不支持 Skill，也可以手动运行脚本。先克隆仓库：
+
+```bash
+git clone https://github.com/banpie/sinan-skill.git
 ```
 
 先做只读检查：
 
 ```bash
-python3 project-sinan/scripts/init_project.py --project /path/to/your/project --check
+python3 sinan-skill/scripts/init_project.py --project /path/to/your/project --check
 ```
 
 预览将新增哪些文件：
 
 ```bash
-python3 project-sinan/scripts/init_project.py \
+python3 sinan-skill/scripts/init_project.py \
   --project /path/to/your/project \
   --title "我的项目" \
   --goal "用一句话说明项目目标" \
@@ -90,7 +145,7 @@ python3 project-sinan/scripts/init_project.py \
 正式初始化：
 
 ```bash
-python3 project-sinan/scripts/init_project.py \
+python3 sinan-skill/scripts/init_project.py \
   --project /path/to/your/project \
   --title "我的项目" \
   --goal "用一句话说明项目目标" \
@@ -98,24 +153,6 @@ python3 project-sinan/scripts/init_project.py \
 ```
 
 脚本只使用 Python 标准库，不需要 API Key、账号 Cookie、网络请求或额外依赖。
-
-## 给 Agent 的提示词
-
-在 Codex、OpenCode 或其它支持 Skill / 文件读写的 Agent 中，可以这样使用：
-
-```text
-请使用「项目司南」的方式接管这个项目。
-
-先不要修改任何正式文件。
-
-请先读取当前项目里的说明、任务、文档和最近修改文件，判断项目目标、当前阶段、候选真源和混乱点。
-
-如果项目还没有项目记忆，请帮我建立 AGENTS.md 和 .project 三件套。
-
-建好以后，先告诉我：这个项目现在从哪里继续最合适。
-
-如果这是一个旧项目，第一轮只读盘点，不移动、不删除、不重命名任何文件。
-```
 
 ## 重要原则
 
@@ -126,7 +163,7 @@ python3 project-sinan/scripts/init_project.py \
 
 ## 开源与隐私
 
-项目司南本身不需要任何密钥或登录态，也不会上传你的项目内容。它只在你指定的项目目录中创建文本文件。
+司南 Skill 本身不需要任何密钥或登录态，也不会上传你的项目内容。它只在你指定的项目目录中创建文本文件。
 
 但请注意：如果你把真实客户资料、账号密码、内部报价写进项目文件，这些内容仍然属于你的项目数据，需要你自己做好访问控制和脱敏。
 

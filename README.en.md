@@ -1,13 +1,15 @@
-# Project Sinan
+# Sinan Skill
 
 [中文说明](README.md)
 
-Project Sinan is a lightweight skill for long-running AI-assisted projects. It adds an `AGENTS.md` entrypoint and a `.project/` memory folder so Codex, OpenCode, Claude Code, and similar agents can read the project goal, status, tasks, and handoff notes before continuing the work.
+Sinan Skill is a lightweight skill for long-running AI-assisted projects. It adds an `AGENTS.md` entrypoint and a `.project/` memory folder so Codex, OpenCode, Claude Code, and similar agents can read the project goal, status, tasks, and handoff notes before continuing the work.
 
 The core idea is simple: do not treat a long chat as project memory. Persist stable context back into project files.
 
 ## Who It Is For
 
+- People starting a brand-new project who want the agent to keep the goal stable from day one.
+- People with an already-running project that needs to be reorganized before the next round of work.
 - People building websites, landing pages, tools, or product prototypes with AI.
 - People preparing courses, deliverables, documentation, or operating SOPs.
 - People who use AI across many rounds and feel the project becoming harder to control.
@@ -15,7 +17,7 @@ The core idea is simple: do not treat a long chat as project memory. Persist sta
 
 ## What It Creates
 
-Project Sinan creates or completes these files in your target project:
+Sinan Skill creates or completes these files in your target project:
 
 - `AGENTS.md`: the agent's entrypoint and working protocol.
 - `.project/BRIEF.md`: the original goal, success criteria, scope, and source-of-truth index.
@@ -29,58 +31,111 @@ Quick mental model:
 
 ## Quick Start
 
-### Install As A Skill
+### 1. Install For Codex
 
-The standard Skill entrypoint is the repository-level `SKILL.md`. The `scripts/` directory contains helper scripts the Skill can run; `agents/` contains display or adapter metadata for different agent platforms.
-
-Install globally for Codex:
+Put the Skill in Codex's skills directory:
 
 ```bash
 mkdir -p ~/.codex/skills
-git clone https://github.com/banpie/project-sinan.git ~/.codex/skills/project-sinan
+git clone https://github.com/banpie/sinan-skill.git ~/.codex/skills/sinan-skill
 ```
 
-Install globally for OpenCode:
+If Codex is already open, start a new session after installing so it can reload the Skill list.
+
+### 2. Install For OpenCode
+
+Put the Skill in OpenCode's global skills directory:
 
 ```bash
 mkdir -p ~/.config/opencode/skills
-git clone https://github.com/banpie/project-sinan.git ~/.config/opencode/skills/project-sinan
+git clone https://github.com/banpie/sinan-skill.git ~/.config/opencode/skills/sinan-skill
 ```
 
-For project-local use, you can also clone or symlink this repository into the project's Skill directory, for example `.opencode/skills/project-sinan/` for OpenCode.
-
-After installing, open the target project in Codex, OpenCode, or another `SKILL.md`-aware agent and say:
-
-```text
-Use project-sinan to initialize this project.
-```
-
-Or:
-
-```text
-Use Project Sinan to take over this project. First do a read-only audit, then create AGENTS.md and the .project memory files.
-```
-
-The agent reads `SKILL.md`, decides whether the current directory is a new project, an existing project, or a messy takeover, and then runs `scripts/init_project.py` when appropriate.
-
-### Run The Script Manually
-
-Clone the repository:
+Or install it for one project only:
 
 ```bash
-git clone https://github.com/banpie/project-sinan.git
+mkdir -p .opencode/skills
+git clone https://github.com/banpie/sinan-skill.git .opencode/skills/sinan-skill
+```
+
+### 3. Use Simple Trigger Phrases
+
+After installing, open the target project and say one of these:
+
+```text
+Initialize this project.
+```
+
+```text
+Take over this project.
+```
+
+```text
+Organize this project.
+```
+
+```text
+Continue this project.
+```
+
+```text
+Set up project memory so we do not lose context.
+```
+
+The agent reads `SKILL.md`, decides whether the current directory is a new project, an already-running project, or a messy takeover, and then runs `scripts/init_project.py` when appropriate.
+
+## New Projects And Existing Projects
+
+For a new project, say:
+
+```text
+Initialize this project. It is an AI course resource organizer. Set up project memory and the first-stage tasks.
+```
+
+For an existing project, say:
+
+```text
+Take over this project. First do a read-only audit. Do not move, delete, or rename files yet. Tell me where to continue.
+```
+
+For a messy folder, say:
+
+```text
+Organize this project. First create a project map and identify sources of truth. Do not modify production files yet.
+```
+
+To continue previous work, say:
+
+```text
+Continue this project. Read AGENTS.md and .project first, then continue from the open tasks.
+```
+
+## Why This Repository Has More Than SKILL.md
+
+The standard Skill entrypoint is still the repository-level `SKILL.md`. The other files make the Skill more reliable:
+
+- `SKILL.md`: the core agent workflow and trigger rules.
+- `scripts/init_project.py`: a helper script that creates `AGENTS.md` and `.project/`.
+- `agents/openai.yaml`: display metadata and default prompt for Codex-like platforms.
+
+## Run The Script Manually
+
+If your agent does not support Skills, you can run the script manually. First clone the repository:
+
+```bash
+git clone https://github.com/banpie/sinan-skill.git
 ```
 
 Run a read-only check:
 
 ```bash
-python3 project-sinan/scripts/init_project.py --project /path/to/your/project --check
+python3 sinan-skill/scripts/init_project.py --project /path/to/your/project --check
 ```
 
 Preview the changes:
 
 ```bash
-python3 project-sinan/scripts/init_project.py \
+python3 sinan-skill/scripts/init_project.py \
   --project /path/to/your/project \
   --title "My Project" \
   --goal "Describe the project goal in one sentence" \
@@ -90,7 +145,7 @@ python3 project-sinan/scripts/init_project.py \
 Initialize the project:
 
 ```bash
-python3 project-sinan/scripts/init_project.py \
+python3 sinan-skill/scripts/init_project.py \
   --project /path/to/your/project \
   --title "My Project" \
   --goal "Describe the project goal in one sentence" \
@@ -98,24 +153,6 @@ python3 project-sinan/scripts/init_project.py \
 ```
 
 The script uses only the Python standard library. It requires no API key, cookie, network request, or extra dependency.
-
-## Prompt For Agents
-
-Use this with Codex, OpenCode, or any file-aware coding agent:
-
-```text
-Use Project Sinan to take over this project.
-
-Do not modify any production files yet.
-
-First, read the existing project notes, task files, documentation, and recently modified files. Identify the project goal, current phase, candidate sources of truth, and confusing areas.
-
-If the project has no durable project memory yet, create the AGENTS.md and .project files.
-
-After that, tell me where this project should continue next.
-
-If this is an old or messy project, the first pass must be read-only. Do not move, delete, or rename any existing files.
-```
 
 ## Principles
 
@@ -126,7 +163,7 @@ If this is an old or messy project, the first pass must be read-only. Do not mov
 
 ## Privacy
 
-Project Sinan does not need credentials or login state, and it does not upload your project content. It only creates text files inside the project directory you specify.
+Sinan Skill does not need credentials or login state, and it does not upload your project content. It only creates text files inside the project directory you specify.
 
 You are still responsible for the data you put in your project. Avoid writing customer data, passwords, internal pricing, or other secrets into project memory.
 

@@ -1,11 +1,11 @@
 ---
-name: project-sinan
-description: Project Sinan helps Codex and other coding agents add a durable AGENTS.md entrypoint and lightweight .project memory to any long-running project. Use it when starting a new project, taking over a messy folder, continuing previous work, preventing goal drift, or asking an agent to remember the original goal, current status, tasks, and handoff notes across sessions.
+name: sinan-skill
+description: Use this skill when the user wants to initialize a new project, start a project, set up project memory, organize an already-running project, take over a messy folder, continue a previous project, recover context, prevent goal drift, or asks with simple trigger phrases such as “初始化项目”, “接管项目”, “整理项目”, “继续项目”, “项目记忆”, “项目管起来”, “别丢上下文”, “start this project”, “take over this project”, or “organize this project”. Sinan Skill creates or updates AGENTS.md and lightweight .project memory so Codex, OpenCode, Claude Code, and similar agents can read the goal, status, tasks, and handoff notes before working.
 ---
 
-# 项目司南 Project Sinan
+# 司南 Skill Sinan Skill
 
-项目司南的核心原则：
+司南 Skill 的核心原则：
 
 不要把长对话当作项目记忆。把稳定上下文写入项目目录，让新会话先读再做。
 
@@ -20,6 +20,17 @@ description: Project Sinan helps Codex and other coding agents add a durable AGE
 | `.project/tasks/` | 单个任务完成后的归档记录 | 每个独立任务收尾时 |
 
 不要把日常小问答都写入状态文件；只沉淀会影响后续执行的事实、选择、阻塞或产出。
+
+## 触发意图
+
+用户不需要说出完整 Skill 名。只要表达以下任一意图，就使用本 Skill：
+
+- 新项目：初始化项目、创建项目、开一个新项目、帮我把这个项目管起来。
+- 旧项目：接管项目、整理项目、这个项目有点乱、先盘点一下、重新梳理。
+- 继续项目：继续上次的项目、恢复上下文、看看做到哪了、从任务清单继续。
+- 防漂移：记录项目目标、建立项目记忆、别丢上下文、下次能接着做。
+
+如果用户只是问一个很小的即时问题，不会产生文件、决策或多步执行，可以直接回答，不必写入 `.project/`。
 
 ## 接管前诊断
 
@@ -45,7 +56,7 @@ python3 "<skill_dir>/scripts/init_project.py" --project "<project_dir>" --check
 
 `--check` 是只读检查；缺少司南文件会返回非零状态并列出待初始化项目。脚本仅使用 Python 标准库，不需要凭证、网络或额外依赖。
 
-## 初始化项目
+## 初始化或整理项目
 
 当用户要开新项目、为现有目录接入管理，或当前项目因散乱文档而缺少真源时：
 
@@ -72,7 +83,7 @@ python3 "<skill_dir>/scripts/init_project.py" \
   --truth-source "docs/00-project/decision-log.md"
 ```
 
-4. 读取新建或既有的 `AGENTS.md` 和三份 `.project` 文件，用真实上下文补全占位项。初始化脚本不会覆盖已存在的状态文件，也只会向已有 `AGENTS.md` 追加一个带边界标记的项目司南入口区块。
+4. 读取新建或既有的 `AGENTS.md` 和三份 `.project` 文件，用真实上下文补全占位项。初始化脚本不会覆盖已存在的状态文件，也只会向已有 `AGENTS.md` 追加一个带边界标记的司南入口区块。
 
 ## 中途接管混乱项目
 
@@ -83,7 +94,7 @@ python3 "<skill_dir>/scripts/init_project.py" \
 1. 只读盘点项目结构、`AGENTS.md`、README、`docs/**`、最近修改文件、任务/计划文件和 `git status --short`。
 2. 不移动、不删除、不重命名任何既有文件；不把旧文件自动归档。
 3. 先判断候选真源：需求/brief、decision log、roadmap、代码入口、数据源、外部链接、最近正在编辑的文件。
-4. 初始化或追加项目司南入口后，在 `.project/STATUS.md` 记录“项目地图”“候选真源”“混乱点/疑问”“当前可继续的工作入口”。
+4. 初始化或追加司南入口后，在 `.project/STATUS.md` 记录“项目地图”“候选真源”“混乱点/疑问”“当前可继续的工作入口”。
 5. 在 `.project/TASKS.md` 写入“确认真源与整理方案”的待办，而不是直接执行整理。
 
 只有在用户明确确认整理方案后，才进入第二阶段整理。
@@ -119,6 +130,11 @@ python3 "<skill_dir>/scripts/init_project.py" \
 
 ## 示例触发
 
+- “初始化项目。”
+- “接管这个项目。”
+- “这个项目有点乱，先整理一下。”
+- “继续项目，看看下一步做什么。”
+- “帮我建立项目记忆，别丢上下文。”
 - “我新建了一个文件夹，帮我把这个新产品研究项目管起来。”
 - “继续上次那个课程迁移项目，看看还有哪些任务没完成。”
 - “这个目录里文档很乱，先整理项目目标和下一步，不要丢上下文。”

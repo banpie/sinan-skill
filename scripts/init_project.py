@@ -9,14 +9,16 @@ import pathlib
 import sys
 
 
-START_MARKER = "<!-- project-sinan:start -->"
-END_MARKER = "<!-- project-sinan:end -->"
+START_MARKER = "<!-- sinan-skill:start -->"
+END_MARKER = "<!-- sinan-skill:end -->"
+LEGACY_START_MARKER = "<!-- project-sinan:start -->"
+LEGACY_END_MARKER = "<!-- project-sinan:end -->"
 
 
 def agents_block() -> str:
     return f"""\
 {START_MARKER}
-## 项目司南入口
+## 司南 Skill 入口
 
 本项目主要通过 AI 对话推进。`AGENTS.md` 是每次新会话的入口，`.project/` 是跨会话项目记忆后端。
 
@@ -164,13 +166,13 @@ def tasks_template(date: str) -> str:
 
 ## 已完成
 
-- [x] {date} 初始化项目管家文件。证据：`.project/` 与项目管家规则已创建。
+- [x] {date} 初始化司南 Skill 文件。证据：`.project/` 与司南入口规则已创建。
 """
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="为 AI 协作项目创建 AGENTS.md 入口和轻量持久记忆；默认仅补缺，不覆盖已有内容。"
+        description="为 AI 协作项目创建 AGENTS.md 入口和轻量持久记忆；适合新项目初始化和旧项目接管整理；默认仅补缺，不覆盖已有内容。"
     )
     parser.add_argument("--project", default=".", help="目标项目目录，默认当前目录。")
     parser.add_argument("--title", help="项目标题；未提供时使用目录名。")
@@ -182,7 +184,7 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help="已有事实真源路径或链接，可重复传入，例如 docs/00-project/decision-log.md。",
     )
-    parser.add_argument("--check", action="store_true", help="只读检查项目是否已接入项目管家。")
+    parser.add_argument("--check", action="store_true", help="只读检查项目是否已接入司南 Skill。")
     parser.add_argument("--dry-run", action="store_true", help="预览需要新增的文件，不实际写入。")
     return parser.parse_args()
 
@@ -203,7 +205,9 @@ def agents_action(path: pathlib.Path) -> str:
     if not path.exists():
         return "create"
     text = path.read_text(encoding="utf-8")
-    if START_MARKER in text and END_MARKER in text:
+    if (START_MARKER in text and END_MARKER in text) or (
+        LEGACY_START_MARKER in text and LEGACY_END_MARKER in text
+    ):
         return "ready"
     return "append"
 
@@ -212,13 +216,13 @@ def check_project(project: pathlib.Path) -> int:
     missing = [str(path.relative_to(project)) for path, _ in required_state(project) if not path.exists()]
     action = agents_action(project / "AGENTS.md")
     if action != "ready":
-        missing.append("AGENTS.md 中的项目司南入口")
+        missing.append("AGENTS.md 中的司南入口")
     if missing:
-        print(f"项目尚未完全接入项目管家：{project}")
+        print(f"项目尚未完全接入司南 Skill：{project}")
         for item in missing:
             print(f"- 缺少：{item}")
         return 1
-    print(f"项目司南检查通过：{project}")
+    print(f"司南 Skill 检查通过：{project}")
     return 0
 
 
@@ -237,19 +241,19 @@ def initialize(project: pathlib.Path, dry_run: bool) -> int:
     agents_path = project / "AGENTS.md"
     action = agents_action(agents_path)
     if action == "create":
-        changes.append("创建 AGENTS.md 并写入项目司南入口")
+        changes.append("创建 AGENTS.md 并写入司南入口")
         if not dry_run:
             title = ARGS.title or project.name or "未命名项目"
             agents_path.write_text(agents_template(title), encoding="utf-8")
     elif action == "append":
-        changes.append("向现有 AGENTS.md 追加项目司南入口")
+        changes.append("向现有 AGENTS.md 追加司南入口")
         if not dry_run:
             existing = agents_path.read_text(encoding="utf-8")
             separator = "\n\n" if existing and not existing.endswith("\n\n") else ""
             agents_path.write_text(existing + separator + agents_block(), encoding="utf-8")
 
     if not changes:
-        print(f"项目已接入项目管家，无需修改：{project}")
+        print(f"项目已接入司南 Skill，无需修改：{project}")
         return 0
 
     prefix = "将执行" if dry_run else "已完成"
