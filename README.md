@@ -98,6 +98,40 @@ git clone https://github.com/banpie/sinan-skill.git .opencode/skills/sinan-skill
 
 Agent 会自动读取 `SKILL.md`，判断当前目录是新项目、已经在跑的项目，还是需要先盘点的混乱项目。
 
+如果你同时安装过旧版“项目管家”或其它项目管理类 Skill，Agent 可能会优先命中旧 Skill。遇到这种情况，第一次可以说得更明确：
+
+```text
+使用 sinan-skill 初始化项目
+```
+
+确认能正常触发后，日常再说“初始化项目”“接管项目”“继续项目”就可以。
+
+### 5. 验证安装成功
+
+最简单的自测方式：
+
+1. 新建一个空文件夹。
+2. 用 Codex 或 OpenCode 打开这个文件夹。
+3. 只说一句：
+
+```text
+初始化项目
+```
+
+成功时，你会看到新建了这些文件：
+
+```text
+AGENTS.md
+.project/BRIEF.md
+.project/STATUS.md
+.project/TASKS.md
+```
+
+如果没有创建，先检查两件事：
+
+- Skill 是否放在正确目录：Codex 是 `~/.codex/skills/sinan-skill/`，OpenCode 是 `~/.config/opencode/skills/sinan-skill/`。
+- OpenCode 是否能正常调用模型；如果它提示模型不可用，请先在 OpenCode 里切换到可用模型，再重新说“初始化项目”。
+
 ## 新项目和旧项目怎么用
 
 司南 Skill 有两条主线：新项目从一开始建立项目记忆；老项目先只读接手，再判断下一步。

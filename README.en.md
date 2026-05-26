@@ -98,6 +98,40 @@ Set up project memory so we do not lose context.
 
 The agent reads `SKILL.md`, decides whether the current directory is a new project, an already-running project, or a messy takeover, and then runs `scripts/init_project.py` when appropriate.
 
+If you also have an older project-management Skill installed, the agent may route to that older Skill first. In that case, be explicit the first time:
+
+```text
+Use sinan-skill to initialize this project.
+```
+
+After you confirm it works, short phrases such as “Initialize this project”, “Take over this project”, and “Continue this project” should be enough.
+
+### 5. Verify The Install
+
+The simplest smoke test:
+
+1. Create an empty folder.
+2. Open that folder with Codex or OpenCode.
+3. Say only:
+
+```text
+Initialize this project.
+```
+
+When it works, these files should appear:
+
+```text
+AGENTS.md
+.project/BRIEF.md
+.project/STATUS.md
+.project/TASKS.md
+```
+
+If they do not appear, check two things first:
+
+- The Skill is in the right directory: `~/.codex/skills/sinan-skill/` for Codex, or `~/.config/opencode/skills/sinan-skill/` for OpenCode.
+- OpenCode can call its configured model. If OpenCode says the model is unavailable, switch to an available model first, then say “Initialize this project” again.
+
 ## New Projects And Existing Projects
 
 Sinan Skill has two main paths: set up durable memory for a new project from day one, or take over an existing project with a read-only audit first.
